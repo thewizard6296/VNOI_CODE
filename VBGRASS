@@ -1,0 +1,49 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 110;
+const int INF = 1000000001;
+ 
+int m, n;
+int d[][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+int a[MAXN][MAXN];
+ 
+int main(){
+   if(HOME){
+      freopen("VBGRASS.inp", "r", stdin);
+      freopen("VBGRASS.out", "w", stdout);
+   }
+ 
+   char s[MAXN];
+   gets(s);
+   sscanf(s, "%d %d", &m, &n);
+   FORE(i, 1, m){
+      gets(s);
+      if(DBG) printf("%s\n", s);
+      FOR(j, 0, n) a[i][j+1] = s[j]=='#';
+   }
+ 
+   int res = 0;
+   FORE(i, 1, m) FORE(j, 1, n) if(a[i][j]){
+      a[i][j]=0; res++;
+      FOR(t, 0, 4) a[i+d[t][0]][j+d[t][1]] = 0;
+   }
+ 
+   printf("%d\n", res);
+ 
+   return 0;
+}
