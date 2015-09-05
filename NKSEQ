@@ -1,0 +1,50 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 100010;
+const int INF = 1000000001; //10^9+1
+ 
+int n;
+int a[MAXN], sl[MAXN], sr[MAXN], minL[MAXN], maxR[MAXN];
+ 
+int main(){
+   if(HOME){
+      freopen("NKSEQ.inp", "r", stdin);
+      freopen("NKSEQ.out", "w", stdout);
+   }
+ 
+   scanf("%d", &n);
+   FORE(i, 1, n) scanf("%d", a+i);
+ 
+   FORE(i, 1, n){
+      sl[i] = sl[i-1]+a[i];
+      minL[i] = minL[i-1] <? sl[i];
+   }
+ 
+   FORD(i, n, 1){
+      sr[i] = sr[i+1]+a[i];
+      maxR[i] = maxR[i+1] >? sr[i];
+   }
+ 
+   int res = 0;
+   FORE(i, 1, n)
+      if(sr[i] > 0 && sr[i]+minL[i-1] > 0 && sr[i]-maxR[i+1] > 0) res++;
+ 
+   printf("%d\n", res);
+ 
+   return 0;
+}
