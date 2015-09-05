@@ -1,0 +1,45 @@
+#include<algorithm>
+#include<vector>
+#include<queue>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 16;
+const int INF = 1000000001;
+ 
+int n, lim;
+int c[MAXN];
+int f[1<<MAXN];
+ 
+int main(){
+   //tmake(); return 0;
+   if(HOME){
+      freopen("VCOWFLIX.inp", "r", stdin);
+      freopen("VCOWFLIX.out", "w", stdout);
+   }
+ 
+   scanf("%d %d", &lim, &n);
+   FOR(i, 0, n) scanf("%d", c+i);
+ 
+   int t, x, res=0;
+   FOR(x, 0, 1<<n){
+      t = 0;
+      FOR(i, 0, n) if( x & (1<<i) ) t += c[i];
+      if(t <= lim) res >?= t;
+   }
+ 
+   printf("%d\n", res);
+   return 0;
+}
