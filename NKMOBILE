@@ -1,0 +1,51 @@
+#include<algorithm>
+using namespace std;
+ 
+const int DBG = 0;
+const int HOME = 0;
+int n, t[1025][1025];
+ 
+void init(int s){
+   n = s;
+   memset(t, 0, sizeof(t));
+}
+ 
+void setv(int x, int y, int c){
+   int ix, iy;
+   for(ix=x; ix<=n; ix+=ix & -ix)
+      for(iy=y; iy<=n; iy+=iy & -iy) t[ix][iy]+=c;
+}
+ 
+int getv(int x, int y){
+   int ret = 0, ix, iy;
+   for(ix=x; ix>0; ix-=ix & -ix)
+      for(iy=y; iy>0; iy-=iy & -iy) ret+=t[ix][iy];
+   return ret;
+}
+ 
+int sum(int x1, int y1, int x2, int y2){
+   return getv(x2, y2)-getv(x1-1, y2)-getv(x2, y1-1)+getv(x1-1, y1-1);
+}
+ 
+int main(){
+   if(HOME){
+      freopen("NKMOBILE.inp", "r", stdin);
+      freopen("NKMOBILE.out", "w", stdout);
+   }
+ 
+   int instr, a, b, c, d;
+   do{
+      scanf("%d", &instr);
+      switch(instr){
+         case 0: scanf("%d", &a); init(a); break;
+         case 1: scanf("%d %d %d", &a, &b, &c); setv(a+1, b+1, c); break;
+         case 2: scanf("%d %d %d %d", &a, &b, &c, &d);
+                 printf("%d\n", sum(a+1, b+1, c+1, d+1)); break;
+         case 3: return 0;
+         default: ;
+      }
+   } while(instr!=3);
+ 
+   return 0;
+}
+ 
