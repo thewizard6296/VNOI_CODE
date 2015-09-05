@@ -1,0 +1,71 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 524288;
+const int INF = 1000000001;
+ 
+int n;
+int list[MAXN];
+int rank[2][MAXN];
+int itree[20][MAXN];
+int ans;
+ 
+int main(){
+   if(HOME){
+      freopen("NKTEAM.inp", "r", stdin);
+      freopen("NKTEAM.out", "w", stdout);
+   }
+ 
+   int i, t;
+   int level, offset;
+ 
+   scanf("%d", &n);
+   for (i=1; i<=n; i++) scanf("%d", &list[i]);
+   for (i=1; i<=n; i++) {
+      scanf("%d", &t);
+      rank[0][t] = i;
+   }
+   for (i=1; i<=n; i++) {
+      scanf("%d", &t);
+      rank[1][t] = i;
+   }
+ 
+/*
+   Xet theo chieu tang cua rank0, gia su la MAN = list[i]
+   Voi MAN, trong sparse table chi co thong tin ve nhung nguoi co rank0 nho hon MAN
+      - Tim tren sparse table mien rank1 < rank1 cua MAN
+      - Neu rank2 nho nhat trong mien do < rank2 cua MAN
+      - thi suy ra co nguoi gioi hon MAN
+      - Nguoc lai, MAN la 1 exellent contestant
+*/
+ 
+   for (i=1; i<=n; i++) {
+      int man = list[i];
+      t = 1;
+      for (level=0, offset=rank[1][man]; level<=19; level++, offset/=2) {
+         if (!itree[level][offset] || rank[0][man]<itree[level][offset])
+            itree[level][offset] = rank[0][man];
+         if (offset%2 && itree[level][offset-1] && itree[level][offset-1]<rank[0][man]) {
+            t = 0; break;
+         }
+      }
+      ans += t;
+   }
+   printf("%d\n", ans);
+ 
+   return 0;
+}
