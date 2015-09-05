@@ -1,0 +1,120 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB push_back
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 100010;
+const int INF = 1000000001;
+ 
+int n, k, root, maxh, maxp, maxc, minc;
+int h[MAXN];
+int t[18][MAXN][3]; //0: name; 1: maxc; 2: minc
+VVII g;
+ 
+void buildTree(int u){
+   int v;
+   TR(g[u], iv) if( (v=iv->first) != t[0][u][0]){
+      t[0][v][0] = u;
+      t[0][v][1] = t[0][v][2] = iv->second;
+      h[v] = h[u] + 1;
+      maxh >?= h[v];
+      buildTree(v);
+   }
+}
+ 
+int findDad(int u, int l){
+   FORD(p, maxp-1, 0) if(h[u]-(1<<p) >= l){
+      maxc >?= t[p][u][1];
+      minc <?= t[p][u][2];
+      u = t[p][u][0];
+   }
+   return u;
+}
+ 
+int main(){
+   if(HOME){
+      freopen("LUBENICA.inp", "r", stdin);
+      freopen("LUBENICA.out", "w", stdout);
+   }
+ 
+   scanf("%d", &n);
+   g.resize(n);
+   FOR(i, 0, n-1){
+      int u, v, c;
+      scanf("%d %d %d", &u, &v, &c);
+      if(DBG)printf("%d %d %d\n", u, v, c);
+      u--, v--;
+      g[u].PB(II(v, c)); g[v].PB(II(u, c));
+   }
+ 
+   root = 0; h[root] = 0;
+   t[0][root][0] = root;
+   t[0][root][1] = 0;
+   t[0][root][2] = INF;
+ 
+   maxh = 0; maxp = 0;
+   buildTree(root);
+   while(1<<maxp <= maxh) maxp++;
+   maxp++;
+ 
+   FOR(p, 1, maxp) FOR(u, 0, n){
+      int v = t[p-1][u][0];
+      t[p][u][0] = t[p-1][v][0];
+      t[p][u][1] = t[p-1][u][1] >? t[p-1][v][1];
+      t[p][u][2] = t[p-1][u][2] <? t[p-1][v][2];
+   }
+ 
+   if(DBG){
+      printf("Root: %d\n", root+1);
+      FOR(i, 0, n) printf("Node %d at height %d\n", i+1, h[i]);
+      FOR(p, 0, maxp){
+         printf("Dad level %d\n", 1<<p);
+         FOR(u, 0, n){
+            printf("\tNode %d\n", u+1);
+            printf("\t\tName: %d\n", t[p][u][0]+1);
+            printf("\t\tMaxC: %d\n", t[p][u][1]);
+            printf("\t\tMinC: %d\n", t[p][u][2]);
+         }
+      }
+   }
+ 
+   scanf("%d", &k);
+   FOR(i, 0, k){
+      int u, v;
+      maxc = 0, minc = INF;
+      scanf("%d %d", &u, &v);
+      if(DBG) printf("%d %d\n", u, v);
+      u--; v--;
+      if(h[u]>h[v]) u = findDad(u, h[v]);
+      if(h[v]>h[u]) v = findDad(v, h[u]);
+ 
+      if(DBG)printf("Balance: %d %d %d %d\n", u+1, v+1, minc, maxc);
+ 
+      FORD(p, maxp-1, 0) if(t[p][u][0] != t[p][v][0]){
+         maxc >?= t[p][u][1] >? t[p][v][1];
+         minc <?= t[p][u][2] <? t[p][v][2];
+         u = t[p][u][0]; v = t[p][v][0];
+         if(DBG) printf("%d %d\n", u+1, v+1);
+      }
+      if(u!=v){
+         maxc >?= t[0][u][1] >? t[0][v][1];
+         minc <?= t[0][u][2] <? t[0][v][2];
+         u = t[0][u][0]; v = t[0][v][0];
+         if(DBG) printf("%d %d\n", u+1, v+1);
+      }
+      printf("%d %d\n", minc, maxc);
+   }
+ 
+   return 0;
+}
