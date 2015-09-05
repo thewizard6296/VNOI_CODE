@@ -1,0 +1,60 @@
+//MBIPALIN
+const
+   ip='';
+   op='';
+   max=1000000;
+   maxn=100000;
+ 
+var
+   n,digit,i,l,r,dem:longint;
+   x,y,m,res,mu10:int64;
+   count:array[0..max] of int64;
+   mol:array[0..maxn] of int64;
+ 
+begin
+ 
+assign(input,ip);reset(input);
+assign(output,op);rewrite(output);
+ 
+read(n,m);
+ 
+mu10:=1;
+for i:=1 to n div 2 do mu10:=mu10*10;
+ 
+digit:=((n div 2)-1)div 2+1;
+l:=1;
+for i:=1 to digit-1 do l:=l*10;
+r:=l*10-1;
+ 
+for i:=0 to r do
+   begin
+      x:=i;
+      y:=0;
+      dem:=0;
+      while dem<digit do
+         begin
+            y:=y*10+x mod 10;
+            x:=x div 10;
+            inc(dem);
+         end;
+      x:=i;
+ 
+      if not odd(n div 2) then x:=x*(r+1)+y
+      else x:=x*l+y mod l;
+ 
+ 
+      count[x mod m]:=count[x mod m]+1;
+      mol[i]:=x mod m;
+ 
+   end;
+ 
+for i:=l to r do
+   begin
+      x:=(m-(mol[i]*mu10) mod m)mod m;
+      res:=res+count[x];
+   end;
+ 
+write(res);
+close(input);close(output);
+ 
+end.
