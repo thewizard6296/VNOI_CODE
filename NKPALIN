@@ -1,0 +1,54 @@
+#include<algorithm>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+using namespace std;
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 2010;
+ 
+int n;
+char s[MAXN], res[MAXN];
+int f[MAXN][MAXN];
+ 
+void trace(int l, int r, int resl, int resr){
+   if(resl>resr) return;
+   if(resl==resr){ res[resl]=s[l]; return; }
+   if(f[l][r]==f[l][r-1]) { trace(l, r-1, resl, resr); return; }
+   if(f[l][r]==f[l+1][r]) { trace(l+1, r, resl, resr); return; }
+   res[resl] = res[resr] = s[l];
+   trace(l+1, r-1, resl+1, resr-1);
+}
+ 
+int main(){
+   if(HOME){
+      freopen("nkpalin.inp", "r", stdin);
+      freopen("nkpalin.out", "w", stdout);
+   }
+ 
+   fgets(s, MAXN, stdin);
+   n = strlen(s)-1;
+   while(!isalpha(s[n])) n--;
+   if(DBG){
+      s[n+1] = '\0';
+      printf("*%s*\n%d\n", s, n+1);
+   }
+ 
+   memset(f, 0, sizeof f);
+   FORE(j, 0, n){
+      f[j][j]=1;
+      FORD(i, j-1, 0)
+         f[i][j] = (f[i][j-1] >? f[i+1][j]) >? (f[i+1][j-1]+(s[i]==s[j])*2);
+   }
+ 
+   if(DBG){
+      printf("Len: %d\n", f[0][n]);
+   }
+ 
+   res[f[0][n]] = '\0';
+ 
+   trace(0, n, 0, f[0][n]-1);
+   printf("%s\n", res);
+ 
+   return 0;
+}
