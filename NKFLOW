@@ -1,0 +1,94 @@
+using namespace std;
+#include<algorithm>
+#include<vector>
+#include<list>
+#include<map>
+#include<set>
+#include<queue>
+#include<stack>
+#include<cmath>
+#include<cassert>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define MP make_pair
+#define PB push_back
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+ 
+typedef pair<int, int> II;
+typedef vector<int> VI;
+typedef vector<II> VII;
+typedef vector<VI> VVI;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 10+1000;
+const int INF = 1000000001;
+ 
+struct edge{
+   int to, c, link;
+   edge(int x=0, int y=0, int z=0){
+      to = x, c = y, link = z;
+   }
+};
+ 
+int n, m, s, t;
+int d[MAXN], tr[MAXN], x[MAXN];
+vector< vector<edge> > f;
+ 
+int aug(){
+   memset(x, 0, sizeof x);
+   memset(d, 0, sizeof d);
+   queue<int> q;
+   d[s] = INF; q.push(s); x[s] = 1;
+   int u, v, c, iu, iv, delta;
+   while(!q.empty() && !d[t]){
+      u = q.front(); q.pop();
+      TR(f[u], iter){
+         v = iter->to; c = iter->c;
+         iv = iter->link;
+         if(!x[v] && c>0){
+            d[v] = d[u] <? c;
+            tr[v] = iv;
+            q.push(v); x[v] = 1;
+            if(DBG) printf("(%d,%d) --%d--> (%d,%d)\n", u+1, d[u], c, v+1, d[v]);
+         }
+      }
+   }
+ 
+   if(DBG) printf("Aug path %d\n", d[t]);
+   if(!d[t]) return 0;
+   v = t; delta = d[t];
+   while(v!=s){
+      iv = tr[v];
+      u = f[v][iv].to; iu = f[v][iv].link;
+ 
+      f[u][iu].c -= delta;
+      f[v][iv].c += delta;
+      v = u;
+   }
+   return delta;
+}
+ 
+int main(){
+   if(HOME){
+      freopen("NKFLOW.inp", "r", stdin);
+      freopen("NKFLOW.out", "w", stdout);
+   }
+ 
+   scanf("%d %d %d %d", &n, &m, &s, &t); s--; t--;
+   f.resize(n);
+   FOR(i, 0, m){
+      int u, v, c, iu, iv;
+      scanf("%d %d %d", &u, &v, &c); u--; v--;
+      iu = f[u].size(); iv = f[v].size();
+      f[u].PB(edge(v, c, iv)); f[v].PB(edge(u, 0, iu));
+   }
+ 
+   int res = 0, r;
+   while(r=aug()) res += r;
+   printf("%d\n", res);
+ 
+   return 0;
+}
