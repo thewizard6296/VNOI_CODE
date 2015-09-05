@@ -1,0 +1,127 @@
+#include<algorithm>
+#include<cassert>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i<_b; i++)
+const int DEBUG=0;
+const int HOME=0;
+const int MAXK=40;
+const int BASE=100000000;
+typedef long long LL;
+struct bigInt{
+   int dg[5];
+   int len;
+ 
+   bigInt(LL v=0){
+      memset(dg, 0, sizeof dg);
+      len=5;
+      FOR(i, 0, len){ dg[i]=v%BASE; v/=BASE; }
+      while(len>1 && dg[len-1]==0) len--;
+   }
+ 
+   bool operator<=(const bigInt b)const{
+      if(len<b.len) return true;
+      if(len>b.len) return false;
+      for(int i=len-1; i>=0; i--){
+         if(dg[i]<b.dg[i]) return true;
+         if(dg[i]>b.dg[i]) return false;
+      }
+      return true;
+   }
+ 
+   bool operator==(const bigInt b)const{
+      if(len!=b.len) return false;
+      for(int i=len-1; i>=0; i--) if(dg[i]!=b.dg[i]) return false;
+      return true;
+   }
+ 
+   static void outdg(int n){
+      char s[10];
+      sprintf(s,"%d",n);
+      FOR(l, strlen(s), 8) putchar('0');
+      printf("%s",s);
+   }
+ 
+   void output(){
+      printf("%d",dg[len-1]);
+      for(int i=len-2; i>=0; --i) outdg(dg[i]);
+   }
+ 
+   void outputn(){
+      printf("%d",dg[len-1]);
+      for(int i=len-2; i>=0; --i) outdg(dg[i]);
+      putchar('\n');
+   }
+};
+ 
+bigInt operator+(const bigInt a, const bigInt b){
+   bigInt ret;
+   int len=max(a.len, b.len), c=0, v;
+   FOR(i, 0, len){
+      v=a.dg[i]+b.dg[i]+c;
+      ret.dg[i]=v%BASE;
+      c=v/BASE;
+      assert(ret.dg[i]>=0 && ret.dg[i]<BASE);
+   }
+   if(c) ret.dg[len++]=c;
+   ret.len=len;
+   assert(len>0 && ret.dg[len-1]);
+   return ret;
+}
+ 
+bigInt operator-(const bigInt a, const bigInt b){
+   bigInt ret;
+   int len=a.len, c=0, v;
+   FOR(i, 0, len){
+      v=a.dg[i]-b.dg[i]-c;
+      c=v<0?1:0;
+      ret.dg[i]=c?v+BASE:v;
+      assert(ret.dg[i]>=0 && ret.dg[i]<BASE);
+   }
+   while(len>1 && ret.dg[len-1]==0) len--;
+   ret.len=len;
+   assert(len>0);
+   return ret;
+}
+ 
+int k;
+LL p, q, u, v;
+bigInt pow[81];
+ 
+bigInt solve(bigInt u, bigInt v, int sz, bigInt h, bigInt t){
+   bigInt half, t2, t3, t4, r=u, c=v;
+   half=pow[sz-1]; t2=t+t; t3=t2+t; t4=t3+t;
+   if(half<=r) r=r-half; if(half<=c) c=c-half;
+   int type= u==r ? (v==c?1:2) : (v==c?3:4);
+   if(!sz) return h;
+ 
+   if(DEBUG){
+      printf("\nToa do: "); u.output(); printf(","); v.outputn();
+      printf("Loai  : %d\n", type);
+      printf("Thu tu: "); h.output(); printf("/"); t.outputn();
+   }
+ 
+   if(type==1) return solve(r, half-c-bigInt(1), sz-1, t+bigInt(1)-h, t4);
+   if(type==2) return solve(r, c, sz-1, t3+h, t4);
+   if(type==3) return solve(half-r-bigInt(1), half-c-bigInt(1), sz-1, t+h, t4);
+   return solve(half-r-bigInt(1), c, sz-1, t3+bigInt(1)-h, t4);
+}
+ 
+int main(){
+   if(HOME){
+      freopen("gifts.inp", "r", stdin);
+      freopen("gifts.out", "w", stdout);
+   }
+ 
+   pow[0]=bigInt(1);
+   FOR(i, 1, 81) pow[i]=pow[i-1]+pow[i-1];
+ 
+   if(HOME) scanf("%d %I64d %I64d %I64d %I64d", &k, &p, &q, &u, &v);
+   else scanf("%d %lld %lld %lld %lld", &k, &p, &q, &u, &v);
+ 
+   solve(bigInt(p), bigInt(q), k, bigInt(1), bigInt(1)).output();
+ 
+   putchar(' ');
+ 
+   solve(bigInt(u), bigInt(v), k, bigInt(1), bigInt(1)).outputn();
+   return 0;
+}
