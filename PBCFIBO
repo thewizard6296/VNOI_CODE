@@ -1,0 +1,77 @@
+#include<algorithm>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define MP(a, b) make_pair(a, b)
+using namespace std;
+const int DBG = 0;
+const int HOME = 0;
+const int MAXK = 10010;
+const int MAXL = 40010;
+typedef long long LL;
+ 
+LL n, s;
+int k;
+ 
+int c[MAXK], f[MAXL];
+LL res[MAXK];
+ 
+int solve(LL n, int k, LL s){
+   if(n<=2) return s;
+   if(k==1) return s==n ? 2 : (s==n-1 ? 1 : 0);
+ 
+   f[0] = (1+2)%k; f[1] = (2+f[0])%k; f[2] = (f[0]+f[1])%k;
+ 
+   int len=1;
+   do{
+      len++;
+      f[len+1] = (f[len-1]+f[len])%k;
+   } while(!(f[len]==f[0] && f[len+1]==f[1]));
+ 
+   if(DBG){
+      printf("%I64d %d %I64d\n", n, k, s);
+      printf(" 1 2");
+      FOR(i, 0, len+2) printf(" %d", f[i]);
+      printf("\nCycle: %d\n", len);
+   }
+ 
+   FOR(i, 0, len) c[ f[i] ]++;
+   FOR(i, 0, k) res[i] = LL(c[i])*((n-2)/len);
+   FOR(i, 0, (n-2)%len) res[ f[i] ]++;
+   res[1]++; res[2]++;
+   k >?= 3;
+ 
+   if(DBG){
+      FOR(i, 0, k) printf("%d%c", c[i], i==k-1?'\n':' ');
+      FOR(i, 0, k) printf("%I64d%c", res[i], i==k-1?'\n':' ');
+   }
+ 
+   FOR(i, 0, k){
+      if(s<=res[i]) return i;
+      res[i+1] += res[i];
+   }
+}
+ 
+int brute(LL n, int k, LL s){
+   f[0] = 1; f[1] = 2;
+   FOR(i, 2, n) f[i] = (f[i-2]+f[i-1])%k;
+   memset(c, 0, sizeof c);
+   FOR(i, 0, n) c[f[i]]++;
+   k >?= 3;
+   FOR(i, 0, k) printf("%d%c", c[i], i==k-1?'\n':' ');
+   sort(f, f+n);
+   return f[s-1];
+}
+ 
+int main(){
+   if(HOME){
+      freopen("pbcfibo.inp", "r", stdin);
+      freopen("pbcfibo.out", "w", stdout);
+   }
+   if(HOME) scanf("%I64d %d %I64d", &n, &k, &s);
+   else scanf("%lld %d %lld", &n, &k, &s);
+   printf("%d\n", solve(n, k, s));
+   if(DBG)printf("%d\n", brute(n, k, s));
+ 
+   return 0;
+}
