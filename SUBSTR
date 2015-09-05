@@ -1,0 +1,59 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 1000010;
+const int INF = 1000000001;
+ 
+int m, n;
+char a[MAXN], b[MAXN];
+int kmp[MAXN];
+ 
+void preKMP(){
+   int i = 0, j = kmp[0] = -1;
+ 
+   while(i < m){
+      while(j > -1 && b[i] != b[j]) j = kmp[j];
+      i++; j++;
+      if (b[i] == b[j]) kmp[i] = kmp[j];
+      else kmp[i] = j;
+   }
+}
+ 
+int main(){
+   if(HOME){
+      freopen("SUBSTR.inp", "r", stdin);
+      freopen("SUBSTR.out", "w", stdout);
+   }
+ 
+   gets(a); gets(b);
+   n = strlen(a); m = strlen(b);
+   preKMP();
+ 
+   int i = 0, j = 0, found = 0;
+   while(j < n){
+      while(i > -1 && b[i] != a[j]) i = kmp[i];
+      i++; j++;
+      if (i >= m){
+         if(found) putchar(' ');
+         printf("%d", j-i+1);
+         i = kmp[i]; found = 1;
+      }
+   }
+   putchar('\n');
+ 
+   return 0;
+}
