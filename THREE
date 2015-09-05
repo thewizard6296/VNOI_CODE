@@ -1,0 +1,73 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef pair<int, int> II;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 110;
+const int INF = 1000000001;
+ 
+int n, m, k=0, test=0;
+int f[MAXN][MAXN], id[MAXN][MAXN], tr[MAXN][MAXN];
+ 
+void trace(int u, int v){
+   if(u==v) return;
+   int t=tr[u][v];
+   if(t==-1){
+      if(DBG) printf("Select edge (%d, %d, %d, %d)\n", u+1, v+1, f[u][v], id[u][v]);
+      if(id[u][v]>0) id[u][v] = (id[v][u] *= -1), k++;
+      return;
+   }
+   trace(u, t); trace(t, v);
+}
+ 
+int main(){
+   if(HOME){
+      freopen("THREE.inp", "r", stdin);
+      freopen("THREE.out", "w", stdout);
+   }
+ 
+   scanf("%d %d", &n, &m);
+   FOR(i, 0, n){
+      f[i][i] = 0;
+      FOR(j, i+1, n) f[i][j] = f[j][i] = INF;
+   }
+ 
+   FOR(i, 0, m){
+      int u, v, c;
+      scanf("%d %d %d", &u, &v, &c);
+      u--; v--;
+      if(f[u][v] > c) f[u][v] = f[v][u] = c, id[u][v] = id[v][u] = i+1;
+   }
+ 
+   memset(tr, 0xff, sizeof tr);
+ 
+   FOR(t, 0, n) FOR(i, 0, n) FOR(j, 0, n)
+      if(f[i][j] > f[i][t]+f[t][j]){
+         f[i][j] = f[i][t]+f[t][j];
+         tr[i][j] = t;
+      }
+ 
+   int r=0, res = f[0][r]+f[1][r]+f[2][r];
+   FOR(i, 0, n) if(res > f[0][i]+f[1][i]+f[2][i]){
+      r = i; res = f[0][i]+f[1][i]+f[2][i];
+   }
+   trace(r, 0); trace(r, 1); trace(r, 2);
+ 
+   printf("%d\n%d\n", res, k);
+   FOR(i, 0, n) FOR(j, i+1, n)
+      if(id[i][j]<0){
+         printf("%d%c", -id[i][j], --k?' ':'\n');
+         test += f[i][j];
+      }
+ 
+   if(DBG) printf("Calc: %d, checked: %d\n", res, test);
+ 
+   return 0;
+}
