@@ -1,0 +1,60 @@
+const
+    ip='';
+    op='';
+    max=100000;
+    oo=1000000001;
+var n,i,j,k:longint;
+    a,f1,f2,s:array[0..max] of longint;
+    res:longint;
+function fmax(x,y:longint):longint;
+    begin
+        if x>y then exit(x);
+        exit(y);
+    end;
+function fmin(x,y:longint):longint;
+    begin
+        if x<y then exit(x);
+        exit(y);
+    end;
+begin
+assign(input,ip);reset(input);
+assign(output,op);rewrite(output);
+readln(n);
+for i:=1 to n do read(a[i]);
+{---}
+k:=1;
+s[1]:=a[1];
+f1[1]:=1;
+for i:=2 to n do
+    begin
+        j:=k;
+        while a[i]<=s[j] do dec(j);
+        if j=k then
+           begin
+                inc(k);
+                s[k]:=oo;
+           end;
+        s[j+1]:=fmin(a[i],s[j+1]);
+        f1[i]:=k;
+    end;
+{---}
+k:=1;
+s[1]:=a[n];
+f2[n]:=1;
+for i:=n-1 downto 1 do
+    begin
+        j:=k;
+        while a[i]<=s[j] do dec(j);
+        if j=k then
+           begin
+                inc(k);
+                s[k]:=oo;
+           end;
+        s[j+1]:=fmin(a[i],s[j+1]);
+        f2[i]:=k;
+    end;
+{---}
+for i:=1 to n do res:=fmax(res,fmin(f1[i],f2[i])*2-1);
+write(res);
+close(input);close(output);
+end.
