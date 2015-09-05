@@ -1,0 +1,90 @@
+using namespace std;
+#include<algorithm>
+#include<vector>
+#include<list>
+#include<map>
+#include<set>
+#include<queue>
+#include<stack>
+#include<cmath>
+#include<cassert>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define MP make_pair
+#define PB push_back
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 1500+10;
+const int INF = 1000000001;
+ 
+typedef pair<int, int> II;
+typedef vector<int> VI;
+typedef vector<II> VII;
+typedef vector<VI> VVI;
+typedef vector<VII> VVII;
+ 
+int n, no, nc;
+int low[MAXN], num[MAXN], id[MAXN], deg[MAXN];
+stack<int> s;
+VVI g;
+ 
+ 
+void DFS(int u){
+   low[u] = num[u] = ++no;
+ 
+   s.push(u);
+   int v;
+ 
+   TR(g[u], iv){
+      if(id[v = *iv] >= 0) continue;
+      if(num[v]) low[u] <?= num[v];
+      else{
+         DFS(v); low[u] <?= low[v];
+      }
+   }
+ 
+   if(low[u] == num[u]){
+      do{
+         v = s.top(); s.pop(); id[v] = nc;
+      } while(v!=u);
+      nc++;
+   }
+}
+ 
+int main(){
+   if(HOME){
+      freopen("MESSAGE.inp", "r", stdin);
+      freopen("MESSAGE.out", "w", stdout);
+   }
+ 
+   char s[MAXN];
+ 
+   gets(s);
+   if(DBG) printf("%s\n", s);
+   sscanf(s, "%d", &n);
+   g.resize(n);
+   FOR(i, 0, n){
+      gets(s);
+      if(DBG) printf("%s\n", s);
+      FOR(j, 0, n) if(s[j]=='1') g[i].PB(j);
+   }
+ 
+   memset(num, 0, sizeof num);
+   memset(id, 0xff, sizeof id);
+   no = nc = 0;
+   FOR(u, 0, n) if(!num[u]) DFS(u);
+ 
+   memset(deg, 0, sizeof deg);
+   FOR(u, 0, n) TR(g[u], iv)
+      if(id[u] != id[*iv]) deg[ id[*iv] ] = 1;
+ 
+   int res = 0;
+   FOR(i, 0, nc) if(!deg[i]) res++;
+ 
+   printf("%d\n", res);
+ 
+   return 0;
+}
