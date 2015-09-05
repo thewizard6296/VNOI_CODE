@@ -1,0 +1,53 @@
+#include<algorithm>
+#include<vector>
+#include<cmath>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 10010;
+const int INF = 1000000001;
+ 
+int n=0, m;
+int a[MAXN], ok[MAXN];
+ 
+inline int valid(int x){
+   int k = int(sqrt(2*x));
+   return 2*x==k*(k+1) ? 1 : 0;
+}
+ 
+int main(){
+   if(HOME){
+      freopen("QBMSEQ.inp", "r", stdin);
+      freopen("QBMSEQ.out", "w", stdout);
+   }
+ 
+   scanf("%d", &n);
+   int x, k;
+   FORE(i, 0, n) scanf("%d", a+i);
+ 
+   int res = 0, start = 0;
+ 
+   FORE(i, 1, n) ok[i] = valid(a[i]);
+ 
+   FORE(i, 1, n){
+      if(DBG)printf("%d %d %d %d\n", ok[i-1], ok[i], a[i-1], a[i]);
+      if(ok[i-1]) res >?= i-start;
+      if(ok[i] && (!ok[i-1] || a[i]<a[i-1])) start = i;
+   }
+ 
+   printf("%d\n", res);
+ 
+   return 0;
+}
