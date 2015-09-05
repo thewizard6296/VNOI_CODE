@@ -1,0 +1,71 @@
+// CPRIME
+{$N+}
+const maxg=100000000;
+      maxn=10000000;
+var n,i,j,x,m,y,max,cc:longint;
+    nt:array[1..maxg] of boolean;
+    a:array[1..maxn] of longint;
+    p:array[1..1000] of longint;
+function Find(x,l,r:longint):longint;
+         var m:longint;
+         begin
+              Find:=0;
+              if x<a[l] then exit;
+              if x>=a[r] then
+                 begin
+                      Find:=r-l+1;
+                      exit;
+                 end;
+              m:=(l+r)shr 1;
+              Find:=Find(x,l,m)+Find(x,m+1,r);
+         end;
+procedure Process(n:longint);
+          var x:longint;
+          begin
+               x:=Find(n,1,m);
+               writeln(100*abs(x-n/ln(n))/x:0:1);
+          end;
+begin
+n:=1;
+readln(p[1]);
+while p[n]>0 do
+      begin
+           if max<p[n] then max:=p[n];
+           inc(n);
+           readln(p[n]);
+      end;
+dec(n);
+cc:=n;
+{----}
+n:=trunc(sqrt(max));
+nt[2]:=true;nt[3]:=true;
+for i:=1 to n do
+    for j:=1 to n do
+        begin
+             x:=sqr(i shl 1)+sqr(j);
+             if (x<=max)and((x mod 12=1)or(x mod 12=5)) then nt[x]:=not nt[x];
+             dec(x,sqr(i));
+             if (x<=max)and(x mod 12=7) then nt[x]:=not nt[x];
+             dec(x,sqr(j) shl 1);
+             if (i>j)and(x<=max)and(x mod 12=11) then nt[x]:=not nt[x];
+        end;
+for i:=5 to n do
+    if nt[i] then
+       begin
+            x:=sqr(i);
+            y:=x;
+            while y<=max do
+                  begin
+                       nt[y]:=false;
+                       inc(y,x);
+                  end;
+       end;
+for i:=2 to max do
+    if nt[i] then
+       begin
+            inc(m);
+            a[m]:=i;
+       end;
+{-----}
+for i:=1 to cc do Process(p[i]);
+end.
