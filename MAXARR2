@@ -1,0 +1,68 @@
+// MAXARR2
+type int=qword;
+var t,d,k:int;
+    i:longint;
+procedure Solve(x:int);
+var a,b,cc:int;
+     function max(l,r,vl,vr:int):int;
+     var mid:int;
+        begin
+        if l+1=r then
+           begin
+           if vl>vr then exit(vl) else exit(vr);
+           end;
+        mid:=(l+r) div 2;
+        if vl>vr then exit(max(l,mid,vl,vl+vr))
+        else exit(max(mid,r,vl+vr,vr));
+        end;
+ 
+     function find(l,r,vl,vr:int):int;
+     var mid,t1,t2:int;
+        begin
+        if l+1=r then
+           begin
+           if (vr>vl)and(x=r) then exit(vr);
+           exit(vl);
+           end;
+        mid:=(l+r)div 2;
+        if x<=mid then exit(find(l,mid,vl,vl+vr));
+        if x>mid then
+           begin
+           t1:=find(mid,r,vl+vr,vr);
+           t2:=max(l,mid,vl,vl+vr);
+           if t1>t2 then exit(t1)else exit(t2);
+           end;
+        end;
+    begin
+    a:=0;
+    b:=1;
+ 
+    while d*2<=x do
+       begin
+       d:=d*2;
+       cc:=a+b;
+       a:=b;
+       b:=cc;
+       end;
+ 
+    if d*2=x then begin writeln(cc);exit;end;
+ 
+    a:=find(d,d*2,1,1);
+    if a>cc then {r[c[i]]:=a}writeln(a) else {r[c[i]]:=cc;}writeln(cc);
+ 
+    end;
+ 
+ 
+begin
+{assign(input,'data.in');reset(input);
+assign(output,'result.out');rewrite(output);
+}
+read(t);
+for i:=1 to t do
+   begin
+   d:=1;
+   read(k);
+   Solve(k);
+   end;
+{close(output);
+}end.
