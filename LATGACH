@@ -1,0 +1,55 @@
+#include<algorithm>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define MP(a, b) make_pair(a, b)
+using namespace std;
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 110;
+const int BASE = 1000000000;
+const int SIZE = 9;
+int t;
+int a[MAXN], digit[9];
+int f[MAXN][4];
+ 
+void write(int n){
+   int i = 2;
+   while(!f[n][i]) i--;
+   printf("%d", f[n][i]);
+   while(i--){
+      char s[10];
+      sprintf(s, "%d", f[n][i]);
+      FOR(l, strlen(s), SIZE) putchar('0');
+      printf("%s", s);
+   }
+   printf("\n");
+}
+ 
+void cong(int n){
+   FOR(i, 0, 3){
+      f[n][i] += f[n-1][i]+f[n-2][i];
+      f[n][i+1] += f[n][i]/BASE;
+      f[n][i] %= BASE;
+   }
+   if(DBG) write(n);
+}
+ 
+int main(){
+   if(HOME){
+      freopen("LATGACH.inp", "r", stdin);
+      freopen("LATGACH.out", "w", stdout);
+   }
+ 
+   scanf("%d", &t);
+   FOR(i, 0, t) scanf("%d", a+i);
+ 
+   memset(f, 0, sizeof f);
+   f[0][0] = f[1][0] = 1;
+   FOR(i, 2, 101) cong(i);
+ 
+   FOR(i, 0, t) write(a[i]);
+ 
+   return 0;
+}
+ 
