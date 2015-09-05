@@ -1,0 +1,59 @@
+using namespace std;
+#include<algorithm>
+#include<vector>
+#include<list>
+#include<map>
+#include<set>
+#include<queue>
+#include<stack>
+#include<cmath>
+#include<cassert>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define MP make_pair
+#define PB push_back
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef pair<int, int> II;
+typedef vector<int> VI;
+typedef vector<II> VII;
+typedef vector<VI> VVI;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 10+1000;
+const int INF = 1000000001;
+ 
+int n;
+int next[MAXN];
+char w[MAXN][MAXN];
+ 
+int main(){
+   if(HOME){
+      freopen("NKLEAGUE.inp", "r", stdin);
+      freopen("NKLEAGUE.out", "w", stdout);
+   }
+ 
+   scanf("%d\n", &n);
+   FORE(i, 1, n) gets(&w[i][1]);
+ 
+   if(DBG) FORE(i, 1, n) printf("%s\n", w[i]+1);
+ 
+   FORE(i, 1, n) w[0][i] = 1, w[i][n+1] = 0;
+ 
+   next[0] = n+1;
+   FORE(i, 1, n){
+      int p = 0, t;
+      while(w[p][i]=='0' || w[i][t=next[p]]=='0') p = t;
+      next[i] = t; next[p] = i;
+   }
+ 
+   int i = next[0];
+   while(1){
+      printf("%d%c", i, next[i]==n+1?'\n':' ');
+      if((i = next[i])==n+1) break;
+   }
+ 
+   return 0;
+}
