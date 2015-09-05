@@ -1,0 +1,113 @@
+// GSS
+const max=50000;
+type new=record
+     l,r:longint;
+     g:longint;
+     end;
+var n,m,i:longint;
+    x,u,v:longint;
+    f:array[1..max shl 2+1] of new;
+    sum:array[1..max shl 2+1] of longint;
+function fmax3(x,y,z:longint):longint;
+         begin
+              if x>y then
+                 if x>z then fmax3:=x
+                 else fmax3:=z
+              else
+                  if y>z then fmax3:=y
+                  else fmax3:=z;
+         end;
+function fmax2(x,y:longint):longint;
+         begin
+              if x>y then fmax2:=x else fmax2:=y;
+         end;
+procedure Up(p,l,r,i:longint);
+          var m,c:longint;
+          begin
+               if (i<l)or(r<i) then exit;
+               inc(sum[p],x);
+               if l=r then
+                  begin
+                       f[p].g:=x;
+                       f[p].l:=x;
+                       f[p].r:=x;
+                       exit;
+                  end;
+               m:=(l+r)shr 1;
+               c:=p shl 1;
+               Up(c,l,m,i);
+               Up(c+1,m+1,r,i);
+               f[p].g:=fmax3(f[c].g,f[c+1].g,f[c].r+f[c+1].l);
+               f[p].l:=fmax2(f[c].l,sum[c]+f[c+1].l);
+               f[p].r:=fmax2(f[c+1].r,sum[c+1]+f[c].r);
+          end;
+function Left(p,l,r,v:longint):longint;
+         var m,c:longint;
+         begin
+              if v=r then
+                 begin
+                      Left:=f[p].l;
+                      exit;
+                 end;
+              m:=(l+r)shr 1;
+              c:=p shl 1;
+              if m>=v then
+                 begin
+                      Left:=Left(c,l,m,v);
+                      exit;
+                 end;
+              Left:=fmax2(f[c].l,sum[c]+Left(c+1,m+1,r,v));
+         end;
+function Right(p,l,r,u:longint):longint;
+         var m,c:longint;
+         begin
+              if u=l then
+                 begin
+                      Right:=f[p].r;
+                      exit;
+                 end;
+              m:=(l+r)shr 1;
+              c:=p shl 1;
+              if m<u then
+                 begin
+                      Right:=Right(c+1,m+1,r,u);
+                      exit;
+                 end;
+              Right:=fmax2(f[c+1].r,sum[c+1]+Right(c,l,m,u));
+         end;
+function GSS(p,l,r,u,v:longint):longint;
+         var m,c:longint;
+         begin
+              if (l=u)and(r=v) then
+                 begin
+                      Gss:=f[p].g;
+                      exit;
+                 end;
+              c:=p shl 1;
+              m:=(l+r)shr 1;
+              if v<=m then
+                 begin
+                      Gss:=Gss(c,l,m,u,v);
+                      exit;
+                 end;
+              if u>m then
+                 begin
+                      Gss:=Gss(c+1,m+1,r,u,v);
+                      exit;
+                 end;
+              Gss:=fmax3(Gss(c,l,m,u,m),Gss(c+1,m+1,r,m+1,v),Left(c+1,m+1,r,v)+Right(c,l,m,u));
+         end;
+begin
+read(n);
+for i:=1 to n do
+    begin
+         read(x);
+         Up(1,1,n,i);
+    end;
+read(m);
+for i:=1 to m do
+    begin
+         read(u,v);
+         writeln(GSS(1,1,n,u,v));
+    end;
+end.
