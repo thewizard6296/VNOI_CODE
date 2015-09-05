@@ -1,0 +1,90 @@
+#include<algorithm>
+#include<vector>
+#include<queue>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 16;
+const int INF = 1000000001;
+ 
+int n;
+int c[MAXN][MAXN];
+int f[1<<MAXN][MAXN];
+ 
+int brute(){
+   int t, res = INF, a[n];
+   FOR(i, 0, n) a[i] = i;
+   do{
+      t = 0;
+      FOR(i, 0, n-1) t += c[a[i]][a[i+1]];
+      res <?= t;
+   } while(next_permutation(a, a+n));
+   return res;
+}
+ 
+void write(int s, int u, int f){
+   printf("(");
+   FOR(i, 0, n) if(s & (1<<i)) printf(" %d", i);
+   printf(" ) %d %d", u, f);
+}
+ 
+void tmake(){
+   freopen("LEM3.inp", "w", stdout);
+   n = 16;
+   printf("%d\n", n);
+   FOR(i, 0, n) FOR(j, 0, n)
+      printf("%d%c", i==j ? 0 : rand()%10+1, j==n-1?'\n':' ');
+}
+ 
+int main(){
+   //tmake(); return 0;
+   if(HOME){
+      freopen("LEM3.inp", "r", stdin);
+      freopen("LEM3.out", "w", stdout);
+   }
+ 
+   scanf("%d", &n);
+   FOR(i, 0, n) FOR(j, 0, n) scanf("%d", &c[i][j]);
+ 
+   FOR(i, 0, 1<<n) FOR(j, 0, n) f[i][j] = INF;
+   FOR(i, 0, n) f[1<<i][i] = 0;
+ 
+   FOR(i, 1, 1<<n) FOR(u, 0, n) if(f[i][u] != INF){
+      FOR(v, 0, n) if(!(i & (1<<v))){
+ 
+         int j = i|(1<<v);
+ 
+         f[j][v] <?= f[i][u]+c[u][v];
+ 
+         if(DBG){
+            write(i, u, f[i][u]);
+            printf(" -- (%d, %d) %d --> ", u, v, c[u][v]);
+            write(j, v, f[j][v]);
+            printf("\n");
+         }
+      }
+   }
+ 
+   int end = (1<<n) - 1, res = INF;
+   FOR(i, 0, n){
+      if(DBG){ write(end, i, f[end][i]); printf("\n"); }
+      res <?= f[end][i];
+   }
+ 
+   printf("%d\n", res);
+   if(DBG) printf("%d\n", brute());
+ 
+   return 0;
+}
