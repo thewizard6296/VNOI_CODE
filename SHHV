@@ -1,0 +1,61 @@
+using namespace std;
+#include<algorithm>
+#include<vector>
+#include<list>
+#include<map>
+#include<set>
+#include<queue>
+#include<stack>
+#include<cmath>
+#include<cassert>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define MP make_pair
+#define PB push_back
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+ 
+typedef pair<int, int> II;
+typedef vector<int> VI;
+typedef vector<II> VII;
+typedef vector<VI> VVI;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 10+12;
+const int INF = 1000000001;
+ 
+int n, s;
+int a[MAXN], f[MAXN], x[MAXN];
+ 
+int main(){
+   if(HOME){
+      freopen("SHHV.inp", "r", stdin);
+      freopen("SHHV.out", "w", stdout);
+   }
+ 
+   while(scanf("%d", &a[n])!=EOF) n++;
+   n--; s = a[n];
+ 
+   f[0] = 1; FOR(i, 1, n) f[i] = f[i-1]*i;
+ 
+   int res = 1, c;
+   FOR(i, 0, n){
+      c = 0;
+      FOR(j, i+1, n) if(a[j]<a[i]) c++;
+      res += c*f[n-i-1];
+   }
+   printf("%d\n", res);
+ 
+   FOR(i, 0, n) x[i] = i+1;
+   s--;
+   FOR(i, 0, n){
+      c = s/f[n-i-1]; s %= f[n-i-1];
+      a[i] = x[c];
+      swap(x[c], x[n-i-1]); sort(x, x+(n-i-1));
+   }
+   FOR(i, 0, n) printf("%d%c", a[i], i==n-1?'\n':' ');
+ 
+   return 0;
+}
