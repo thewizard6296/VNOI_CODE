@@ -1,0 +1,53 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int hiN = 1<<16;
+const int INF = 1000000001;
+ 
+int n, q;
+int lo[17][hiN], hi[17][hiN];
+ 
+int main(){
+   if(HOME){
+      freopen("NKLINEUP.inp", "r", stdin);
+      freopen("NKLINEUP.out", "w", stdout);
+   }
+ 
+   scanf("%d %d", &n, &q);
+   int x, a, b;
+   FOR(i, 0, n){
+      scanf("%d", &x);
+      lo[0][i] = hi[0][i] = x;
+   }
+ 
+   for(int p = 1, half = 1; 1<<p <= n; p++, half <<= 1) FOR(i, 0, n){
+      lo[p][i] = lo[p-1][i] <? lo[p-1][i+half];
+      hi[p][i] = hi[p-1][i] >? hi[p-1][i+half];
+   }
+ 
+   int len, p, half, res;
+   FOR(t, 0, q){
+      scanf("%d %d", &a, &b);
+      a--; len = b-a; p = 1;
+      while(1<<p <= len) p++; p--;
+      half = 1<<p;
+      res = (hi[p][a] >? hi[p][b-half]) - (lo[p][a] <? lo[p][b-half]);
+      printf("%d\n", res);
+   }
+ 
+   return 0;
+}
