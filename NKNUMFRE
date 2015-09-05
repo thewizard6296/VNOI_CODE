@@ -1,0 +1,32 @@
+// NKNUMFRE
+var i,a,b,x:longint;
+    res:longint;
+function UCLN(x,y:longint):longint;
+         var r:longint;
+         begin
+              while x mod y<>0 do
+                    begin
+                         r:=x mod y;
+                         x:=y;
+                         y:=r;                         
+                    end;
+              UCLN:=y;
+         end;
+procedure Dao(x:longint;var y:longint);
+          begin
+               y:=0;
+               while x>0 do
+                     begin
+                          y:=y*10+x mod 10;
+                          x:=x div 10;
+                     end;
+          end;
+begin
+read(a,b);
+for i:=a to b do
+       begin
+            dao(i,x);
+            if UCLN(x,i)=1 then inc(res);
+       end;
+write(res);
+end.
