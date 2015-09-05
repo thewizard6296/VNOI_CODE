@@ -1,0 +1,52 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 510;
+const int INF = 1000000001;
+ 
+int n, q;
+int a[MAXN][MAXN], f[MAXN][MAXN];
+ 
+int main(){
+   if(HOME){
+      freopen("VBOARD.inp", "r", stdin);
+      freopen("VBOARD.out", "w", stdout);
+   }
+ 
+   scanf("%d", &n);
+   int x, i1, j1, i2, j2;
+   FORE(i, 1, n) FORE(j, 1, n){
+      scanf("%d", &x); a[i][j] = x * ( ((i+j)%2) *2-1);
+      if(DBG) printf("%d%c", a[i][j], j==n?'\n':' ');
+   }
+ 
+ 
+ 
+   memset(f, 0, sizeof f);
+   FORE(i, 1, n) FORE(j, 1, n) f[i][j] = f[i-1][j]+f[i][j-1]-f[i-1][j-1]+a[i][j];
+ 
+   scanf("%d", &q);
+ 
+   FOR(i, 0, q){
+      scanf("%d %d %d %d", &i1, &j1, &i2, &j2);
+      i1--; j1--;
+      x = f[i2][j2]-f[i2][j1]-f[i1][j2]+f[i1][j1];
+      printf("%d\n", abs(x));
+   }
+ 
+   return 0;
+}
