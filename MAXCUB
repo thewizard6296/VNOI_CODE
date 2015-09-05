@@ -1,0 +1,60 @@
+//MAXCUB
+const max=30;
+var n,i,j,k,x,y,z:longint;
+    t,s:longint;
+    f:array[0..max,0..max,0..max] of longint;
+procedure Enter;
+          var tmp:longint;
+          begin
+               readln(n);
+               for i:=1 to n do
+                   for j:=1 to n do
+                       for k:=1 to n do
+                           begin
+                                read(tmp);
+                                x:=i-1;y:=j-1;z:=k-1;
+                                f[i,j,k]:=tmp+f[x,j,k]+f[i,y,k]+f[i,j,z]+f[x,y,z]-f[x,y,k]-f[x,j,z]-f[i,y,z];
+                           end;
+          end;
+procedure Solve;
+          var c,res:longint;
+              ma:longint;
+              tmp:longint;
+          function min(x,y,z:longint):longint;
+                   begin
+                        if x<y then
+                           if x<z then min:=x
+                           else min:=z
+                        else
+                            if y<z then min:=y
+                            else min:=z;
+                   end;
+          function FindSum(i,j,k,c:longint):longint;
+                   var x,y,z:longint;
+                   begin
+                        x:=i-c;y:=j-c;z:=k-c;
+                        FindSum:=f[i,j,k]-(f[x,j,k]+f[i,y,k]+f[i,j,z]+f[x,y,z]-f[x,y,k]-f[x,j,z]-f[i,y,z]);
+                   end;
+          begin
+               res:=-maxlongint;
+               for i:=1 to n do
+                   for j:=1 to n do
+                       for k:=1 to n do
+                           begin
+                                ma:=min(i,j,k);
+                                for c:=1 to ma do
+                                    begin
+                                         tmp:=FindSum(i,j,k,c);
+                                         if res<tmp then res:=tmp;
+                                    end;
+                           end;
+               writeln(res);                           
+          end;
+begin
+read(t);
+for s:=1 to t do
+    begin
+         Enter;
+         Solve;
+    end;
+end.
