@@ -1,0 +1,54 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 1010;
+const int INF = 1000000001;
+ 
+int m, n;
+int h[MAXN], l[MAXN], r[MAXN], a[MAXN][MAXN];
+ 
+int main(){
+   if(HOME){
+      freopen("QBRECT.inp", "r", stdin);
+      freopen("QBRECT.out", "w", stdout);
+   }
+ 
+   scanf("%d %d", &m, &n);
+   FORE(i, 1, m) FORE(j, 1, n) scanf("%d", &a[i][j]);
+   int res = 0;
+ 
+   FORE(i, 1, m){
+      FORE(j, 1, n) h[j] = a[i][j] ? h[j]+1 : 0;
+      h[0] = h[n+1] = -1;
+ 
+      FORE(j, 1, n){
+         l[j] = j;
+         while(h[l[j]-1] >= h[j]) l[j] = l[l[j]-1];
+      }
+ 
+      FORD(j, n, 1){
+         r[j]=j;
+         while(h[r[j]+1] >= h[j]) r[j] = r[r[j]+1];
+      }
+ 
+      FORE(j, 1, n) res >?= h[j]*(r[j]-l[j]+1);
+   }
+ 
+   printf("%d\n", res);
+ 
+   return 0;
+}
