@@ -1,0 +1,102 @@
+// CRATE
+const max=300000;
+      maxn=100000;
+type new=record
+     a,h,id:longint;
+     end;
+     list=array[1..max] of new;
+var n,i:longint;
+    a:list;
+    fi,la,m:longint;
+    f:array[1..max] of longint;
+    r:array[1..max] of longint;
+    it:array[1..maxn shl 2+1] of longint;
+    t:longint;
+function More(x,y:new):boolean;
+         begin
+              if x.a>y.a then
+                 begin
+                      More:=true;exit;
+                 end;
+              if (x.a=y.a)and(x.h>y.h) then
+                 begin
+                      More:=true;exit;
+                 end;
+              More:=false;
+         end;
+procedure Sort(l,r:longint;var a:list);
+          var i,j:longint;
+              x,y:new;
+          begin
+               i:=l;j:=r;x:=a[(l+r)shr 1];
+               repeat
+                     while More(x,a[i]) do inc(i);
+                     while More(a[j],x) do dec(j);
+                     if i<=j then
+                        begin
+                             y:=a[i];a[i]:=a[j];a[j]:=y;
+                             inc(i);dec(j);
+                        end;
+               until i>j;
+               if l<j then Sort(l,j,a);
+               if i<r then Sort(i,r,a);
+          end;
+procedure Up(p,l,r,x:longint);
+          var mi:longint;
+          begin
+               if (x<l)or(x>r) then exit;
+               inc(it[p]);
+               if l=r then exit;
+               mi:=(l+r)shr 1;
+               p:=p shl 1;
+               Up(p,l,mi,x);
+               Up(p+1,mi+1,r,x);
+          end;
+procedure Get(p,l,r,x:longint;var res:longint);
+          var mi:longint;
+          begin
+               if x<l then exit;
+               if x>=r then
+                  begin
+                       inc(res,it[p]);
+                       exit;
+                  end;
+               mi:=(l+r)shr 1;
+               p:=p shl 1;
+               Get(p,l,mi,x,res);
+               Get(p+1,mi+1,r,x,res);
+          end;
+begin
+readln(n);
+for i:=1 to n do
+    begin
+         a[i].id:=i;
+         readln(a[i].a,a[i].h);
+         if m<a[i].h then m:=a[i].h;
+    end;
+Sort(1,n,a);
+i:=0;
+repeat
+      inc(i);
+      if i>n then
+         begin
+              for i:=1 to n do r[a[i].id]:=f[i];
+              for i:=1 to n do writeln(r[i]);
+              exit;
+         end;
+      fi:=i;la:=i;
+      while (la+1<=n)and(a[la+1].a=a[fi].a) do inc(la);
+      f[fi]:=0;
+      for i:=fi+1 to la do
+          if a[i].h>a[i-1].h then f[i]:=i-fi
+          else f[i]:=f[i-1];
+      for i:=fi to la do
+          begin
+               t:=0;
+               Get(1,0,m,a[i].h,t);
+               inc(f[i],t);
+          end;
+      for i:=fi to la do Up(1,0,m,a[i].h);
+      i:=la;
+until false;
+end.
