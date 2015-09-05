@@ -1,0 +1,43 @@
+include<algorithm>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define MP(a, b) make_pair(a, b)
+using namespace std;
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 5010;
+int n;
+int a[MAXN];
+int f[MAXN][MAXN];
+ 
+int main(){
+   if(HOME){
+      freopen("nktheme.inp", "r", stdin);
+      freopen("nktheme.out", "w", stdout);
+   }
+   scanf("%d", &n);
+   FOR(i, 0, n) scanf("%d", a+i);
+   if(DBG){
+      FOR(i, 0, n) printf("%d ", a[i]);
+      printf("\n");
+   }
+   FORD(i, n-1, 1) a[i] -= a[i-1];
+   if(DBG){
+      FOR(i, 0, n) printf("%d ", a[i]);
+      printf("\n");
+   }
+ 
+   FOR(i, 0, n) FOR(j, i+5, n) f[i][j]=1;
+   FOR(i, 1, n) FOR(j, i+5, n)
+      if(a[i]==a[j]) f[i][j] = f[i-1][j-1]+1;
+   //Co the tang toc bang cach chay tich hop cac vong FOR va
+   //luon chay j tu i+best (cap nhat best lien tuc)
+   int res = 0;
+   FOR(i, 1, n) FOR(j, i+5, n)
+      if(res < f[i][j] && i+f[i][j]<=j) res = f[i][j];
+ 
+   printf("%d\n", res>=5 ? res : 0);
+ 
+   return 0;
+}
