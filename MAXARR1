@@ -1,0 +1,39 @@
+// MAXARR1
+var t,n,x,i,max,tmp:longint;
+    a,fmax:array[1..100000] of longint;
+procedure init;
+          begin
+               a[1]:=1;
+               fmax[1]:=1;
+               max:=1;
+          end;
+begin
+readln(t);
+init;
+for x:=1 to t do
+    begin
+         readln(n);
+         if n<=max then writeln(fmax[n])
+         else
+             begin
+                  for i:=max+1 to n do
+                      begin
+                           tmp:=i div 2;
+                           if odd(i) then
+                              begin
+                                   a[i]:=a[tmp]+a[tmp+1];
+                                   if a[i]>fmax[i-1] then fmax[i]:=a[i]
+                                   else fmax[i]:=fmax[i-1];
+                              end
+                           else
+                               begin
+                                    a[i]:=a[tmp];
+                                    if a[i]>fmax[i-1] then fmax[i]:=a[i]
+                                    else fmax[i]:=fmax[i-1];
+                               end;
+                      end;
+                  max:=n;
+                  writeln(fmax[n]);    
+             end;
+    end;
+end.
