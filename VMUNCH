@@ -1,0 +1,64 @@
+#include<algorithm>
+#include<vector>
+#include<queue>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 110;
+const int INF = 1000000001;
+ 
+int m, n, r1, c1, r2, c2;
+int d[][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+int a[MAXN][MAXN];
+queue<int> q;
+ 
+int main(){
+   if(HOME){
+      freopen("VMUNCH.inp", "r", stdin);
+      freopen("VMUNCH.out", "w", stdout);
+   }
+ 
+   char s[MAXN];
+   gets(s); sscanf(s, "%d %d", &m, &n);
+   FORE(i, 1, m){
+      gets(s);
+      if(DBG) printf("%s\n", s);
+      FOR(j, 0, n) switch(s[j]){
+         case '.': a[i][j+1] = INF; break;
+         case '*': a[i][j+1] = 0;   break;
+         case 'C': r1 = i, c1 = j+1, a[r1][c1] = 0; break;
+         case 'B': r2 = i, c2 = j+1; a[r2][c2] = INF; break;
+         default: a[i][j+1] = 0;
+      }
+   }
+ 
+   q.push(r1); q.push(c1);
+   int u, v, nu, nv, l;
+   while(!q.empty()){
+      u = q.front(); q.pop();
+      v = q.front(); q.pop();
+      l = a[u][v]+1;
+      FOR(i, 0, 4){
+         nu = u+d[i][0]; nv = v+d[i][1];
+         if(a[nu][nv]>l){
+            a[nu][nv] = l; q.push(nu); q.push(nv);
+         }
+      }
+   }
+ 
+   printf("%d\n", a[r2][c2]);
+ 
+   return 0;
+}
