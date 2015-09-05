@@ -1,0 +1,85 @@
+//MATCH1
+const max=100;
+type int=byte;
+var x,y,count:int;
+    matx,maty:array[1..max] of int;
+    f:array[1..max,1..max] of boolean;
+    trace:array[1..max] of int;
+    que:array[1..max] of int;
+procedure Enter;
+          var i,j:int;
+          begin
+               readln(x,y);
+               if eof then exit;
+               repeat
+                     readln(i,j);f[i,j]:=true;
+               until eof;
+               for i:=1 to x do matx[i]:=0;
+               for i:=1 to y do maty[i]:=0;
+          end;
+function Find_Path:int;
+         var i,j,first,last:int;
+         procedure Pop(var x:int);
+                   begin
+                        x:=que[first];inc(first);
+                   end;
+         procedure Push(x:int);
+                   begin
+                        inc(last);
+                        que[last]:=x;
+                   end;
+         begin
+              last:=0;first:=1;
+              for i:=1 to y do trace[i]:=0;
+              for i:=1 to x do
+                  if matx[i]=0 then Push(i);
+              while first<=last do
+                    begin
+                         Pop(i);
+                         for j:=1 to y do
+                             if (trace[j]=0)and f[i,j] and (matx[i]<>j) then
+                                begin
+                                     trace[j]:=i;
+                                     if maty[j]=0 then
+                                        begin
+                                             Find_Path:=j;
+                                             exit;
+                                        end;
+                                     Push(maty[j]);
+                                end;
+                    end;
+              Find_Path:=0;
+         end;
+procedure Up_Match(j:int);
+          var i,tmp:int;
+          begin
+               repeat
+                     i:=trace[j];
+                     tmp:=matx[i];
+                     matx[i]:=j;maty[j]:=i;
+                     j:=tmp;
+               until j=0;
+          end;
+procedure Solve;
+          var i:int;
+          begin
+               count:=0;
+               repeat
+                     i:=Find_Path;
+                     if i=0 then exit;
+                     Up_Match(i);
+                     inc(count);
+               until false;
+          end;
+procedure Print_Result;
+          var i:int;
+          begin
+               writeln(count);
+               for i:=1 to x do
+                   if matx[i]<>0 then writeln(i,' ',matx[i]);
+          end;
+begin
+Enter;
+Solve;
+Print_Result;
+end.
