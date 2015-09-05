@@ -1,0 +1,50 @@
+using namespace std;
+#include<algorithm>
+#include<vector>
+#include<list>
+#include<map>
+#include<set>
+#include<queue>
+#include<stack>
+#include<cmath>
+#include<cassert>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define MP make_pair
+#define PB push_back
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+ 
+typedef pair<int, int> II;
+typedef vector<int> VI;
+typedef vector<II> VII;
+typedef vector<VI> VVI;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 10+100;
+const int MAXM = 10+10000;
+const int INF = 1000000001;
+ 
+int n, m;
+int a[MAXM];
+int c[MAXN][MAXN];
+ 
+int main(){
+   if(HOME){
+      freopen("VDANGER.inp", "r", stdin);
+      freopen("VDANGER.out", "w", stdout);
+   }
+ 
+   scanf("%d %d", &n, &m);
+   FOR(i, 0, m){ scanf("%d", a+i); a[i]--; }
+   FOR(i, 0, n) FOR(j, 0, n) scanf("%d", &c[i][j]);
+ 
+   FOR(k, 0, n) FOR(i, 0, n) FOR(j, 0, n) c[i][j] <?= c[i][k]+c[k][j];
+   int res = 0;
+   FOR(i, 0, m-1) res += c[a[i]][a[i+1]];
+   printf("%d\n", res);
+ 
+   return 0;
+}
