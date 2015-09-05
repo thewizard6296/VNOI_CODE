@@ -1,0 +1,20 @@
+#include<algorithm>
+using namespace std;
+int n, k, t, x, i, j;
+int a[1001][1001];
+int main(){
+   scanf("%d%d", &n, &k);
+   for(i=1; i<=n; i++)
+      for(j=1; j<=n; j++) scanf("%d", &a[i][j]);
+   for(t=0; t<k; t++){
+      scanf("%d", &x); i=1; j=n;
+      while(1){
+         while(x<a[i][j]) j--;
+         if(a[i][j]==x)break;
+         i++;
+      }
+      printf("%d %d\n", i, j);
+   }
+   return 0;
+}
+ 
