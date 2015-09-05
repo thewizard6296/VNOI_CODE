@@ -1,0 +1,120 @@
+Program C11DOLL3;
+Const
+ fi='';
+ nmax=100000;
+Type TT=Longint;
+Var
+ G,f: array[1..nmax*4]of TT;
+ s,a: array[1..nmax]of TT;
+ n,m,k,i,j,u,v,va: TT;
+ 
+Function min(a,b: TT): TT;
+Begin
+if a<b then min:=a else min:=b;
+End;
+///////////
+Procedure nhap;
+Var f: text;
+mi,ma: array[0..nmax]of TT;
+Begin
+mi[0]:=1; ma[0]:=1;
+assign(f,fi);
+reset(f);
+readln(f,n,m);
+for i:=1 to n do
+ begin
+   read(f,a[i]);
+   if a[i]<=a[mi[i-1]] then mi[i]:=i
+   else mi[i]:=mi[i-1];
+   if a[i]>a[ma[i-1]] then ma[i]:=i
+   else ma[i]:=ma[i-1];
+ end;
+Close(f);
+While (n>0)and((mi[n]>n div 2)or(ma[n]<=n div 2)) do dec(n,2);
+if n<=0 then begin write(-1); halt; end;
+m:=a[ma[n]];
+End;
+///////////
+Procedure int;
+Var l,r: array[1..nmax]of TT;
+begin
+for i:=1 to m do begin l[i]:=0; r[i]:=0 end;
+k:=n div 2;
+for i:=1 to k do inc(l[a[i]]);
+for i:=k+1 to k*2 do inc(r[a[i]]);
+s[m]:=-l[m];
+for i:=m-1 downto 1 do s[i]:=s[i+1]+r[i+1]-l[i];
+End;
+///////////
+Procedure kt(x,L,H: TT);
+Begin
+f[x]:=0;
+if L=H then
+ begin
+   G[x]:=s[L];
+   exit;
+ end;
+kt(2*x,L,(L+H)div 2);
+kt(2*x+1,(L+H)div 2+1,H);
+G[x]:=min(G[2*x],G[2*x+1]);
+End;
+//////////////
+Procedure day(x: TT);
+Begin
+if f[x]=0 then exit;
+if 2*x+1<m*4 then
+ begin
+   inc(f[2*x],f[x]);
+   inc(f[2*x+1],f[x]);
+ end;
+inc(G[x],f[x]);
+f[x]:=0;
+End;
+/////////////////
+Procedure solve(x,L,H: TT);
+Begin
+if (v<L)or(H<u) then
+ begin
+   day(x);
+   exit;
+ end;
+if (u<=L)and(H<=v) then
+ begin
+   inc(f[x],va);
+   day(x);
+   exit;
+ end;
+day(x);
+Solve(2*x,L,(L+H)div 2);
+Solve(2*x+1,(L+H)div 2+1,H);
+G[x]:=min(G[2*x],G[2*x+1]);
+End;
+////////////////
+Procedure process;
+Begin
+Repeat
+if G[1]>=0 then exit;
+ 
+u:=1; v:=a[k]-1; va:=2;
+Solve(1,1,m);
+ 
+u:=a[k]; v:=a[k]; va:=1;
+Solve(1,1,m);
+ 
+u:=1; v:=a[2*k]-1; va:=-1;
+Solve(1,1,m);
+ 
+v:=a[2*k-1]-1; va:=-1;
+Solve(1,1,m);
+ 
+dec(k);
+Until k=0;
+End;
+///////////////
+BEGIN
+ nhap;
+ int;
+ kt(1,1,m);
+ Process;
+ if k=0 then write(-1) else Write(k);
+END.
