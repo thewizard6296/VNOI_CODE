@@ -1,0 +1,50 @@
+// CREC01
+label 1,2;
+const max=1001;
+type int=int64;
+var m,n,i,j,t:longint;
+    res:int;
+    last:longint;
+    h,l,s,r:array[0..max] of int;
+    a:array[1..max,1..max] of longint;
+    ch:char;
+function fmax(x,y:longint):longint;
+         begin
+              if x>y then fmax:=x else fmax:=y;
+         end;
+begin
+{assign(input,'in.dat');reset(input);}
+readln(m,n);
+for i:=1 to m do
+    begin
+         for j:=1 to n do
+             begin
+                  read(ch);
+                  if ch='1' then a[i,j]:=1;
+             end;
+         readln;
+    end;
+for i:=1 to m do
+    begin
+         for j:=1 to n do
+             if a[i,j]=0 then h[j]:=0
+             else inc(h[j]);
+         last:=0;
+         for j:=1 to n do
+                 begin
+                      while (last>0)and(h[j]<=h[s[last]]) do dec(last);
+                      if last=0 then l[j]:=0
+                      else l[j]:=s[last];
+                      inc(last);s[last]:=j;
+                 end;
+ 
+          for j:=1 to n do
+              if h[j]>0 then
+                 begin
+                      r[j]:=h[j]*(j-l[j])+r[l[j]];
+                      inc(res,r[j]);
+                 end
+              else r[j]:=0;
+    end;
+write(res);
+end.
