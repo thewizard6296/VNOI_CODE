@@ -1,0 +1,99 @@
+label 1;
+const max=50000;
+      oo=1000000000;
+type int=longint;
+var i,u,v1,last,k,m:longint;
+    n,kq:int;
+    res:array[0..max] of int;
+    h,a:array[1..max] of longint;
+    v:array[0..max] of longint;
+procedure Up(i:longint);
+          label 1;
+          var c,r,t:longint;
+          begin
+               c:=i;t:=h[i];
+               while c>1 do
+                     begin
+                          r:=c shr 1;
+                          if res[h[r]]<=res[t] then goto 1;
+                          h[c]:=h[r];
+                          v[h[c]]:=c;
+                          c:=r;
+                     end;
+               1:
+               h[c]:=t;v[t]:=c;
+          end;
+procedure Down(i:longint);
+          label 1;
+          var c,r,t:longint;
+          begin
+               r:=i;t:=h[i];
+               while r shl 1<=last do
+                     begin
+                          c:=r shl 1;
+                          if c<last then
+                             if res[h[c]]>res[h[c+1]] then inc(c);
+                          if res[t]<=res[h[c]] then goto 1;
+                          h[r]:=h[c];
+                          v[h[r]]:=r;
+                          r:=c;
+                     end;
+               1:
+               h[r]:=t;v[t]:=r;
+          end;
+function Find(i,x,l,r:int):int;
+         var t,s:int;
+         begin
+              Find:=0;
+              if l>r then exit;
+              if l mod x<=i then t:=l div x
+              else t:=l div x+1;
+              if r mod x>=i then s:=r div x
+              else s:=r div x-1;
+              Find:=s-t+1;
+         end;
+begin
+readln(n);
+for i:=1 to n do readln(a[i]);
+if a[1]=1 then
+   begin
+        readln(m);
+        for i:=1 to m do writeln('TAK');
+        exit;
+   end;
+for i:=0 to a[1]-1 do
+    begin
+         v[i]:=i+1;
+         res[i]:=oo;
+         h[i+1]:=i;
+    end;
+res[0]:=0;last:=a[1];
+repeat
+      if last=0 then goto 1;
+      u:=h[1];
+      if res[u]=oo then goto 1;
+      h[1]:=h[last];
+      v[h[1]]:=1;
+      dec(last);
+      Down(1);
+      {---------}
+      for i:=2 to n do
+          begin
+               v1:=(u+a[i])mod a[1];
+               if res[v1]>res[u]+a[i] then
+                  begin
+                       res[v1]:=res[u]+a[i];
+                       Up(v[v1])
+                  end;
+          end; 
+until false;
+1:
+readln(m);
+for i:=1 to m do
+    begin
+         readln(n);
+         u:=n mod a[1];
+         if n>=res[u] then writeln('TAK')
+         else writeln('NIE');
+    end;
+end.
