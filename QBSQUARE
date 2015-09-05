@@ -1,0 +1,54 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 1010;
+const int INF = 1000000001;
+ 
+int m, n;
+int h[2][MAXN], l[2][MAXN], r[2][MAXN], a[MAXN][MAXN];
+ 
+int main(){
+   if(HOME){
+      freopen("QBSQUARE.inp", "r", stdin);
+      freopen("QBSQUARE.out", "w", stdout);
+   }
+ 
+   scanf("%d %d", &m, &n);
+   FORE(i, 1, m) FORE(j, 1, n) scanf("%d", &a[i][j]);
+   int res = 0;
+ 
+   FORE(i, 1, m) FOR(s, 0, 2){
+      FORE(j, 1, n) h[s][j] = a[i][j]==s ? h[s][j]+1 : 0;
+      h[s][0] = h[s][n+1] = -1;
+ 
+      FORE(j, 1, n){
+         l[s][j] = j;
+         while(h[s][l[s][j]-1] >= h[s][j]) l[s][j] = l[s][l[s][j]-1];
+      }
+ 
+      FORD(j, n, 1){
+         r[s][j]=j;
+         while(h[s][r[s][j]+1] >= h[s][j]) r[s][j] = r[s][r[s][j]+1];
+      }
+ 
+      FORE(j, 1, n) res >?= (h[s][j] <? (r[s][j]-l[s][j]+1));
+   }
+ 
+   printf("%d\n", res);
+ 
+   return 0;
+}
