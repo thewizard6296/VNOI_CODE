@@ -1,0 +1,53 @@
+#include<algorithm>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define MP(a, b) make_pair(a, b)
+using namespace std;
+const int DBG = 0;
+const int HOME = 0;
+const int MAnN = 510;
+const int INF = 1000000001;
+ 
+int a, b, np;
+int p[MAnN];
+ 
+bool brutePrime(int n){
+   if(n<=1) return false;
+   int i = 2;
+   while(i*i <= n){
+      if(n%i==0) return false;
+      i++;
+   }
+   return true;
+}
+ 
+void init(){
+   np = 0;
+   FOR(i, 2, MAnN) if(brutePrime(i)) p[np++] = i;
+ 
+   if(DBG) FOR(i, 0, np) printf("%d%c", p[i], i==np-1 ? '\n' : ' ');
+}
+ 
+bool naivePrime(int n){
+   int i = 0;
+   if(n <= 1) return false;
+   while(p[i]*p[i] <= n){
+      if(n%p[i] == 0) return false;
+      i++;
+   }
+   return true;
+}
+ 
+int main(){
+   if(HOME){
+      freopen("pnumber.inp", "r", stdin);
+      freopen("pnumber.out", "w", stdout);
+   }
+ 
+   init();
+   scanf("%d %d", &a, &b);
+   FOR(i, a, b+1) if(naivePrime(i)) printf("%d\n", i);
+ 
+   return 0;
+}
