@@ -1,0 +1,84 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 50010;
+const int INF = 1000000001;
+ 
+int n, k;
+int last[10], p[MAXN];
+char s[289000];
+int next[289000][10];
+ 
+bool isPrim(int x){
+   int i = 0;
+   while(p[i]*p[i] <= x){
+      if(x%p[i]==0) return 0;
+      i++;
+   }
+   return 1;
+}
+ 
+void init(){
+   p[0] = 2; p[1] = 3;
+   int np = 2;
+   int t = 3;
+   while(np < n){
+      t += 2;
+      if(isPrim(t)) p[np++] = t;
+   }
+}
+ 
+int main(){
+   if(HOME){
+      freopen("KDEL.inp", "r", stdin);
+      freopen("KDEL.out", "w", stdout);
+   }
+ 
+   scanf("%d %d", &n, &k);
+   init();
+ 
+   if(DBG) FOR(i, 0, n) printf("%d", p[i]);
+   char *ch;
+   ch = s;
+   FOR(i, 0, n){
+      sprintf(ch, "%d", p[i]);
+      while(*ch) ch++;
+   }
+   if(DBG) printf("\n%s\n", s);
+ 
+   n = strlen(s);
+ 
+   FOR(j, 0, 10) last[j] = INF;
+   FORD(i, n-1, 0){
+      last[s[i]-'0'] = i;
+      FOR(j, 0, 10) next[i][j] = last[j];
+   }
+ 
+   int pos = 0, q = n-k, want;
+   while(k && q){
+      want = 9;
+      while(next[pos][want]-pos > k) want--;
+      printf("%d", want);
+      q--;
+      k -= next[pos][want]-pos;
+      pos = next[pos][want]+1;
+   }
+   if(q) printf("%s\n", s+pos);
+ 
+   return 0;
+}
+ 
