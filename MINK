@@ -1,0 +1,59 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 17010;
+const int INF = 1000000001;
+ 
+int n, k, first, last;
+int a[MAXN], res[MAXN], f[MAXN][2];
+ 
+void add(int x){
+   int c = 1;
+   while(last>=first && x<=f[last][0]) c += f[last][1], last--;
+   last++;
+   f[last][0] = x; f[last][1] = c;
+}
+ 
+int extract(){
+   int t = f[first][0];
+   if(!(--f[first][1])) first++;
+   return t;
+}
+ 
+int main(){
+   if(HOME){
+      freopen("MINK.inp", "r", stdin);
+      freopen("MINK.out", "w", stdout);
+   }
+   int T;
+   scanf("%d", &T);
+   while(T--){
+      scanf("%d %d", &n, &k);
+      FOR(i, 0, n) scanf("%d", a+i);
+ 
+      first = 0; last = -1;
+      FOR(i, 0, n){
+         add(a[i]);
+         if(i >= k-1) res[i+1-k] = extract();
+      }
+ 
+      FOR(i, 0, n-k+1) printf("%d%c", res[i], i==n-k?'\n':' ');
+   }
+ 
+   return 0;
+}
+ 
