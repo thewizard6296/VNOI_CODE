@@ -1,0 +1,47 @@
+using namespace std;
+#include<algorithm>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define MP(a, b) make_pair(a, b)
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 100010;
+const int INF = 1000000001;
+const int MOD = 20122007;
+int n;
+long long res = 1, f[33];
+ 
+long long power(int n){
+   //3^n-1
+   if(DBG) printf("3^%d-1", n);
+   int i = 0;
+   long long ret = 1ll;
+   while(n){
+      if(n&1) ret = ret*f[i] % MOD;
+      n >>= 1; i++;
+   }
+   ret = (ret+MOD-1) % MOD;
+   if(DBG) printf(" = %d\n", ret);
+   return ret;
+}
+ 
+int main(){
+   if(HOME){
+      freopen("MYSTERY.inp", "r", stdin);
+      freopen("MYSTERY.out", "w", stdout);
+   }
+ 
+   scanf("%d", &n);
+   f[0] = 3ll;
+   FOR(i, 1, 33) f[i] = (f[i-1]*f[i-1])%MOD;
+   int i;
+   for(i = 1; i*i<n; i++)
+      if(n%i==0) res = (((res*power(i))%MOD)*power(n/i))%MOD;
+   if(i*i==n) res = res*power(i) % MOD;
+ 
+   printf("%d\n", res);
+ 
+   return 0;
+}
