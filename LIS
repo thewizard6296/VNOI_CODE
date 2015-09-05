@@ -1,0 +1,44 @@
+#include<algorithm>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define MP(a, b) make_pair(a, b)
+using namespace std;
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 30010;
+const int INF = 2147483647;
+ 
+int n, res=0;
+int a[MAXN], f[MAXN];
+ 
+int main(){
+   if(HOME){
+      freopen("LIS.inp", "r", stdin);
+      freopen("LIS.out", "w", stdout);
+   }
+ 
+   scanf("%d", &n);
+   FORE(i, 1, n) scanf("%d", a+i);
+   FORE(i, 1, n+1) f[i] = INF;
+   f[0] = -INF; a[n+1] = INF;
+ 
+   int l, r, mid;
+   FORE(i, 1, n+1){
+      l = 0, r = res;
+      while(l < r){
+         mid = (l+r+1)/2;
+         if(f[mid] < a[i]) l = mid;
+         else r = mid-1;
+      }
+ 
+      if(DBG) printf("\nFOR (val %d at %d) found (len %d val %d)\n", a[i], i, l, f[l]);
+ 
+      f[l+1] <?= a[i]; res >?= l+1;
+      if(DBG) printf("UPDATE len %d to val %d\n", l+1, f[l+1]);
+   }
+ 
+   printf("%d\n", res-1);
+ 
+   return 0;
+}
