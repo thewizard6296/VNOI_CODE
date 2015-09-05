@@ -1,0 +1,56 @@
+#include<algorithm>
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define MP(a, b) make_pair(a, b)
+using namespace std;
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 10010;
+ 
+int n;
+int f[MAXN];
+pair<int, int> a[MAXN];
+ 
+int main(){
+   if(HOME){
+      freopen("nkrez.inp", "r", stdin);
+      freopen("nkrez.out", "w", stdout);
+   }
+   scanf("%d", &n);
+   int x, y;
+   FOR(i, 0, n){
+      scanf("%d %d", &x, &y);
+      a[i] = MP(y, x);
+   }
+   a[n++] = MP(0, 0);
+   sort(a, a+n);
+ 
+   if(DBG){
+      FOR(i, 0, n) printf("%2d: %5d %5d\n", i, a[i].second, a[i].first);
+   }
+ 
+   memset(f, 0, sizeof f);
+   int tbegin, v;
+   FOR(i, 1, n){
+      f[i] = f[i-1];
+      tbegin = a[i].second; v = a[i].first - tbegin;
+      int l = 0, r = i-1, mid;
+      while(l < r){
+         mid = (l+r+1)/2;
+         if(tbegin < a[mid].first) r= mid-1;
+         else l = mid;
+      }
+      f[i] >?= f[l]+v;
+      if(DBG){
+         printf("For order %d (%d, %d) found %d (%d, %d) take %d\n",
+                           i, a[i].second, a[i].first,
+                           l, a[l].second, a[l].first,
+                           f[i]);
+      }
+   }
+ 
+   printf("%d\n", f[n-1]);
+ 
+   return 0;
+}
