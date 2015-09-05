@@ -1,0 +1,80 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXL = 30000;
+const int INF = 1000000001;
+ 
+struct edge{
+   int x, y1, y2, sign;
+   edge(){}
+   edge(int a, int b, int c, int d): x(a), y1(b), y2(c), sign(d){}
+   bool operator<(const edge& b)const {
+      return x<b.x || x==b.x && sign<b.sign;
+   }
+};
+ 
+struct tree{int count, len;};
+ 
+int n;
+vector<edge> e;
+tree t[70001];
+ 
+inline void calc(int pos, int l, int r){
+   if(t[pos].count==0 && l<r)t[pos].len=t[2*pos].len+t[2*pos+1].len;
+}
+ 
+void add(int y1, int y2, int sign, int pos=1, int l=0, int r=MAXL){
+   if(y1<=l && r<=y2){
+      t[pos].count += sign;
+      if(sign>0) t[pos].len=r+1-l;
+      else if(t[pos].count==0){
+         t[pos].len=0;
+         calc(pos, l, r);
+      }
+      return;
+   }
+   int m=(l+r)/2;
+   if(y1<=m) add(y1, y2, sign, pos*2, l, m);
+   if(m<y2) add(y1, y2, sign, pos*2+1, m+1, r);
+   calc(pos, l, r);
+}
+ 
+int main(){
+   if(HOME){
+      freopen("NKMARS.inp", "r", stdin);
+      freopen("NKMARS.out", "w", stdout);
+   }
+ 
+   scanf("%d", &n);
+   int x1, y1, x2, y2;
+   FOR(i, 0, n){
+      scanf("%d %d %d %d", &x1, &y1, &x2, &y2);
+      e.PB(edge(x1, y1, y2, +1));
+      e.PB(edge(x2, y1, y2, -1));
+   }
+   sort(e.begin(), e.end());
+ 
+   int res = 0, lastx = 0;
+   TR(e, i){
+      res += (i->x-lastx)*t[1].len;
+      lastx = i->x;
+      add(i->y1, i->y2-1, i->sign);
+   }
+ 
+   printf("%d\n", res);
+   return 0;
+}
