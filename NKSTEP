@@ -1,0 +1,44 @@
+#include<algorithm>
+#include<vector>
+using namespace std;
+#define FOR(i, a, b) for(int i=(a), _b=(b); i < _b; ++i)
+#define FORE(i, a, b) for(int i=(a), _b=(b); i <= _b; ++i)
+#define FORD(i, a, b) for(int i=(a), _b=(b); i >= _b; --i)
+#define PB(a) push_back(a)
+#define TR(c, it) for(typeof((c).begin()) it=(c).begin(); it!=(c).end(); it++)
+typedef vector<int> VI;
+typedef vector<VI> VVI;
+typedef pair<int, int> II;
+typedef pair<int, II> III;
+typedef vector<II> VII;
+typedef vector<VII> VVII;
+typedef long long LL;
+ 
+const int DBG = 0;
+const int HOME = 0;
+const int MAXN = 110;
+const int INF = 1000000001;
+ 
+int main(){
+   if(HOME){
+      freopen("NKSTEP.inp", "r", stdin);
+      freopen("NKSTEP.out", "w", stdout);
+   }
+ 
+   int T;
+   LL x, y, n, k;
+   scanf("%d", &T);
+   while(T--){
+      if(HOME) scanf("%I64d %I64d", &x, &y);
+      else scanf("%lld %lld", &x, &y);
+      n = x>y ? x-y : y-x;
+      k=0;
+      while(k*k<=n) k++;
+      k--;
+      n -= k*k;
+      if(HOME) printf("%I64d\n", k*2-1+(n>k ? 2: (n ? 1 : 0)));
+      else printf("%lld\n", k*2-1+(n>k ? 2: (n ? 1 : 0)));
+   }
+ 
+   return 0;
+}
